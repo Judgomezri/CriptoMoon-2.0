@@ -7,6 +7,7 @@
             allow_stretch: True
             keep_ratio: False
         BoxLayout:
+            spacing: 15
             orientation: "vertical"
             size_hint: .8, .5
             #width: "300dp"
@@ -15,8 +16,8 @@
                 width: 1
             Label:
             Button:
-                text: 'RSA'
-                on_press: root.manager.current = 'RSA'
+                text: 'Llave Pública'
+                on_press: root.manager.current = 'LlavePublica'
                 width: .5
                     
             Button:
@@ -24,10 +25,99 @@
                 width: .5
         
 
-<RSA_Screen>:
+<LlavePublica_Screen>:
+    Image:
+        source: "space.jpg"
+        allow_stretch: True
+        keep_ratio: False
     BoxLayout:
+        spacing: 10
+        padding: 15, 15
+        orientation: "vertical"
+        GridLayout:
+            cols: 2
+            #Opciones de Cifrado
+            GridLayout:
+                spacing: 10, 10
+                cols: 2
+                Label:
+                    text: "Cifrador "
+                Spinner:
+                    id: cifrador
+                    text: "Seleccione una opción..."
+                    values: ["RSA","Rabin"]
+                    on_text: root.spinner_clicked(cifrador.text)
+                Label:
+                    text: "Primo 1"
+                TextInput:
+                    id: primo1
+
+                Label:
+                    text: "Primo 2"
+                TextInput:
+                    id: primo2
+                
+                Button:
+                    text: 'Generar Primos'
+                    on_press: root.manager.current = 'menu'
+                Button:
+                    text: 'Generar Datos'
+                    on_press: root.manager.current = 'menu'
+
+            #Datos Generados
+            GridLayout:
+                spacing: 10, 10
+                cols: 2
+                Label:
+                    text: "e"
+                    size_hint: .4, 1
+                TextInput:
+                Label:
+                    text: "n"
+                    size_hint: .4, 1
+                TextInput:
+                Label:
+                    size_hint: .4, 1
+                Label:
+                Label:
+                    size_hint: .4, 1
+                Label:
+
+        #Cifrar
+        GridLayout:
+            cols: 2
+            spacing: 15, 15
+            Label: 
+                text: "Texto"
+                size_hint: 1, .3
+            Label:
+                text: "Resultado"
+                size_hint: 1, .3
+            TextInput:
+                border: 5,5,5,5
+                id: Texto
+            TextInput:
+                id: Resultado
+        #Botones de cifrado
+        GridLayout:
+            size_hint: 1,.3
+            cols: 5
+            spacing: 10, 10
+            Button:
+                text: "Cifrar"
+            Button:
+                text: "Descifrar"
+            Button:
+                text: "Pegar"
+            Button:
+                text: "Limpiar"
+            Button:
+                text: "Copiar"
+        Label:
+            size_hint: 1, .2
+
         Button:
-            text: 'My settings button'
-        Button:
+            pos_hint: {"center_x": .5}
+            size_hint:.5, .2
             text: 'Volver al menú'
             on_press: root.manager.current = 'menu'

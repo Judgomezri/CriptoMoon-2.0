@@ -8,8 +8,10 @@ Builder.load_file('CriptoMoon.kv')
 # Declare both screens
 class MenuScreen(Screen):
     pass
-class RSA_Screen(Screen):
-    pass
+class LlavePublica_Screen(Screen):
+
+    def spinner_clicked(self, cifrador):
+        pass
 
 class CriptoMoon(App):
 
@@ -17,7 +19,7 @@ class CriptoMoon(App):
         # Create the screen manager
         sm = ScreenManager()
         sm.add_widget(MenuScreen(name='menu'))
-        sm.add_widget(RSA_Screen(name='RSA'))
+        sm.add_widget(LlavePublica_Screen(name='LlavePublica'))
 
         return sm
 
