@@ -48,22 +48,24 @@
                 Spinner:
                     id: cifrador
                     text: "Seleccione una opción..."
-                    values: ["RSA","Rabin"]
+                    values: ["RSA","Rabin", "ElGamal", "Menezes Vanestone"]
                     on_text: root.spinner_clicked(cifrador.text, data)
                 Label:
                     text: "Primo 1"
                 TextInput:
                     id: primo1
+                    disabled: not data.visible
                 Label:
                     text: "Primo 2"
                 TextInput:
-                    id: primo2                
+                    id: primo2   
+                    disabled: False if cifrador.text!="ElGamal" and data.visible else True  
                 Button:
                     text: 'Generar Primos'
-                    on_press: root.generarPrimos(primo1,primo2)
+                    on_press: root.generarPrimos(cifrador.text, primo1,primo2)
                 Button:
                     text: 'Generar Datos'
-                    on_press: root.generarDatos(cifrador.text, primo1,primo2, data1, data2, data3, data4)
+                    on_press: root.generarDatos(cifrador.text, primo1,primo2, data1, data2, data3, data4, data5)
 
             #Datos Generados
             GridLayout:
@@ -72,40 +74,53 @@
                 spacing: 10, 10
                 cols: 2
                 Label:
-                    text: "n" if cifrador.text == "RSA" else "Data1 Rabin" if cifrador.text=="Rabin" else ""
+                    text: "n" if (cifrador.text == "RSA" or cifrador.text=="Rabin") else "α" if cifrador.text=="ElGamal" else "a" if cifrador.text=="Menezes Vanestone"  else ""
                     size_hint_x: .4 if data.visible else 0
                     opacity: 1 if cifrador.text != "" else 0
                 TextInput:
                     id: data1
-                    size_hint_x: 1 if data.visible and cifrador.text=="RSA" else 0
+                    size_hint_x: 1 if data.visible else 0
                     opacity: 1 if data.visible else 0
                     disabled: not data.visible
                 Label:
-                    text: "Φ(n)" if cifrador.text == "RSA" else "Data 2 Rabin" if cifrador.text=="Rabin" else ""
+                    text: "Φ(n)" if cifrador.text == "RSA" else "β" if cifrador.text=="ElGamal" else "b" if cifrador.text=="Menezes Vanestone"  else ""
                     size_hint_x: .4 if data.visible else 0
-                    opacity: 1 if data.visible else 0
+                    opacity: 1 if data.visible and cifrador.text!="Rabin" else 0
                 TextInput:
                     id: data2
                     size_hint_x: 1 if data.visible else 0
-                    opacity: 1 if data.visible else 0
+                    opacity: 1 if data.visible and cifrador.text!="Rabin" else 0
                     disabled: not data.visible
                 Label:
-                    text: "Clave Pública" if cifrador.text == "RSA" else "Data 2 Rabin" if cifrador.text=="Rabin" else ""
-                    size_hint_x: .4 if data.visible else 0
-                    opacity: 1 if data.visible else 0
+                    text: "Clave Pública" if cifrador.text == "RSA" else "Data 2 Rabin" if cifrador.text=="Rabin" else "p" if cifrador.text=="Menezes Vanestone"  else ""
+                    size_hint_x: .4 if data.visible and cifrador.text!="Menezes Vanestone" else 0
+                    size_hint_y: 1 if data.visible and cifrador.text!="Menezes Vanestone" else 0
+                    opacity: 1 if data.visible and cifrador.text!="Rabin" and cifrador.text!="ElGamal" and cifrador.text!="Menezes Vanestone" else 0
                 TextInput:
                     id: data3
-                    size_hint_x: 1 if cifrador.text=="ej" else 0
-                    opacity: 1 if data.visible and cifrador.text =="RSA" else 0
-                    disabled: cifrador.text=="ej" or not data.visible
-                Label:
-                    size_hint_x: .4 if data.visible else 0
-                    opacity: 1 if data.visible else 0
-                TextInput:
-                    id: data4
-                    size_hint_x: 1 if data.visible else 0
-                    opacity: 1 if data.visible and cifrador.text !="RSA" else 0
-                    #disabled: not cifrador.text=="ej" or not data.visible
+                    size_hint_x: 1 if data.visible and cifrador.text!="Menezes Vanestone" else 0
+                    size_hint_y: 1 if data.visible and cifrador.text!="Menezes Vanestone" else 0
+                    opacity: 1 if data.visible and cifrador.text!="Rabin" and cifrador.text!="ElGamal" and cifrador.text!="Menezes Vanestone" else 0
+                BoxLayout:
+                    spacing: 10
+                    size_hint_x: 1 if cifrador.text=="Menezes Vanestone" else 0
+                    opacity: 1 if cifrador.text=="Menezes Vanestone" else 0
+                    Label:
+                        text: "gx"
+                        size_hint_x: .4 
+                    TextInput:
+                        id: data4
+                        size_hint_x: 1
+                BoxLayout:
+                    spacing: 10
+                    size_hint_x: 1 if cifrador.text=="Menezes Vanestone" else 0
+                    opacity: 1 if cifrador.text=="Menezes Vanestone" else 0
+                    Label:
+                        text: "gy"
+                        size_hint_x: .4 
+                    TextInput:
+                        id: data5
+                        size_hint_x: 1
 
         #Cifrar
         GridLayout:
@@ -129,10 +144,10 @@
             spacing: 10, 10
             Button:
                 text: "Cifrar"
-                on_press: root.cifrar(cifrador.text, primo1.text,primo2.text, data1, data2, data3, data4, Texto, Resultado)
+                on_press: root.cifrar(cifrador.text, primo1.text,primo2.text, data1, data2, data3, data4, data5, Texto, Resultado)
             Button:
                 text: "Descifrar"
-                on_press: root.descifrar(cifrador.text, primo1.text,primo2.text, data1, data2, data3, data4)
+                on_press: root.descifrar(cifrador.text, primo1.text,primo2.text, data1, data2, data3, data4, data5, Texto, Resultado)
             Button:
                 text: "Pegar"
                 on_release: Texto.text = Clipboard.paste()
