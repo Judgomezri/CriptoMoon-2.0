@@ -1,3 +1,5 @@
+#:import Clipboard kivy.core.clipboard.Clipboard
+
 <MenuScreen>:
     AnchorLayout:
         anchor_x: "center"
@@ -23,6 +25,7 @@
             Button:
                 text: 'Quit'
                 width: .5
+                on_press: app.stop()
         
 
 <LlavePublica_Screen>:
@@ -46,42 +49,63 @@
                     id: cifrador
                     text: "Seleccione una opción..."
                     values: ["RSA","Rabin"]
-                    on_text: root.spinner_clicked(cifrador.text)
+                    on_text: root.spinner_clicked(cifrador.text, data)
                 Label:
                     text: "Primo 1"
                 TextInput:
                     id: primo1
-
                 Label:
                     text: "Primo 2"
                 TextInput:
-                    id: primo2
-                
+                    id: primo2                
                 Button:
                     text: 'Generar Primos'
-                    on_press: root.manager.current = 'menu'
+                    on_press: root.generarPrimos(primo1,primo2)
                 Button:
                     text: 'Generar Datos'
-                    on_press: root.manager.current = 'menu'
+                    on_press: root.generarDatos(cifrador.text, primo1,primo2, data1, data2, data3, data4)
 
             #Datos Generados
             GridLayout:
+                id : data
+                visible: False
                 spacing: 10, 10
                 cols: 2
                 Label:
-                    text: "e"
-                    size_hint: .4, 1
+                    text: "n" if cifrador.text == "RSA" else "Data1 Rabin" if cifrador.text=="Rabin" else ""
+                    size_hint_x: .4 if data.visible else 0
+                    opacity: 1 if cifrador.text != "" else 0
                 TextInput:
+                    id: data1
+                    size_hint_x: 1 if data.visible and cifrador.text=="RSA" else 0
+                    opacity: 1 if data.visible else 0
+                    disabled: not data.visible
                 Label:
-                    text: "n"
-                    size_hint: .4, 1
+                    text: "Φ(n)" if cifrador.text == "RSA" else "Data 2 Rabin" if cifrador.text=="Rabin" else ""
+                    size_hint_x: .4 if data.visible else 0
+                    opacity: 1 if data.visible else 0
                 TextInput:
+                    id: data2
+                    size_hint_x: 1 if data.visible else 0
+                    opacity: 1 if data.visible else 0
+                    disabled: not data.visible
                 Label:
-                    size_hint: .4, 1
+                    text: "Clave Pública" if cifrador.text == "RSA" else "Data 2 Rabin" if cifrador.text=="Rabin" else ""
+                    size_hint_x: .4 if data.visible else 0
+                    opacity: 1 if data.visible else 0
+                TextInput:
+                    id: data3
+                    size_hint_x: 1 if cifrador.text=="ej" else 0
+                    opacity: 1 if data.visible and cifrador.text =="RSA" else 0
+                    disabled: cifrador.text=="ej" or not data.visible
                 Label:
-                Label:
-                    size_hint: .4, 1
-                Label:
+                    size_hint_x: .4 if data.visible else 0
+                    opacity: 1 if data.visible else 0
+                TextInput:
+                    id: data4
+                    size_hint_x: 1 if data.visible else 0
+                    opacity: 1 if data.visible and cifrador.text !="RSA" else 0
+                    #disabled: not cifrador.text=="ej" or not data.visible
 
         #Cifrar
         GridLayout:
@@ -105,14 +129,21 @@
             spacing: 10, 10
             Button:
                 text: "Cifrar"
+                on_press: root.cifrar(cifrador.text, primo1.text,primo2.text, data1, data2, data3, data4, Texto, Resultado)
             Button:
                 text: "Descifrar"
+                on_press: root.descifrar(cifrador.text, primo1.text,primo2.text, data1, data2, data3, data4)
             Button:
                 text: "Pegar"
+                on_release: Texto.text = Clipboard.paste()
             Button:
                 text: "Limpiar"
+                on_release: 
+                    Texto.text=""
+                    Resultado.text=""
             Button:
                 text: "Copiar"
+                on_release: Clipboard.copy(Resultado.text)
         Label:
             size_hint: 1, .2
 
