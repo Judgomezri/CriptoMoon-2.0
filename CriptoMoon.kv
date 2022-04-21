@@ -49,7 +49,7 @@
                     id: cifrador
                     text: "Seleccione una opción..."
                     values: ["RSA","Rabin", "ElGamal", "Menezes Vanestone"]
-                    on_text: root.spinner_clicked(cifrador.text, data)
+                    on_text: root.spinner_clicked(cifrador.text, data, primo1, primo2, data1, data2, data3, data4, data5)
                 Label:
                     text: "Primo 1"
                 TextInput:
@@ -59,7 +59,7 @@
                     text: "Primo 2"
                 TextInput:
                     id: primo2   
-                    disabled: False if cifrador.text!="ElGamal" and data.visible else True  
+                    disabled: False if (cifrador.text!="ElGamal" and cifrador.text!="Menezes Vanestone") and data.visible else True  
                 Button:
                     text: 'Generar Primos'
                     on_press: root.generarPrimos(cifrador.text, primo1,primo2)
@@ -144,10 +144,10 @@
             spacing: 10, 10
             Button:
                 text: "Cifrar"
-                on_press: root.cifrar(cifrador.text, primo1.text,primo2.text, data1, data2, data3, data4, data5, Texto, Resultado)
+                on_press: root.cifrar(cifrador.text, primo1,primo2, data1, data2, data3, data4, data5, Texto, Resultado)
             Button:
                 text: "Descifrar"
-                on_press: root.descifrar(cifrador.text, primo1.text,primo2.text, data1, data2, data3, data4, data5, Texto, Resultado)
+                on_press: root.descifrar(cifrador.text, primo1,primo2, data1, data2, data3, data4, data5, Texto, Resultado)
             Button:
                 text: "Pegar"
                 on_release: Texto.text = Clipboard.paste()
