@@ -141,6 +141,7 @@ def descifrarRSA(message, r):
         decrypt_letter = pow(c,priv_key,r)
         decryptleter.append(decrypt_letter)
         convert27 = fromDeci("", 27, decrypt_letter)
+        print(convert27)
 
         for i in range(0,len(convert27)):
                 convert10= toDeci(convert27[i],27)

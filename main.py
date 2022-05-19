@@ -1,12 +1,16 @@
+from tkinter import Label
 from kivy.app import App
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 import PublicKey as pk
+import PublicKeySignature as pks
 from sympy import randprime
+from kivy.uix.popup import Popup 
 
 #Loading the interface properties
-Builder.load_file('CriptoMoon.kv')
+#Builder.load_file('CriptoMoon.kv')
 
+auxtext=""
 def list_to_str(list):
     s=[]
     for i in range(0,len(list)):
@@ -154,12 +158,75 @@ class LlavePublica_Screen(Screen):
             Resultado.select_all(); Resultado.delete_selection()
             Resultado.insert_text(str(pk.descifrarMenezesVanestone(text)))
 
+class FirmaDigital_Screen(Screen):
+    def changeStyle(self,text):
+        if text== "Icon":
+            return "List", 'icon'
+        else: return "Icon", 'list'
+    def aplicarRuta(self, ruta, files):
+        files.path=ruta.text
+        if files.path!=ruta.text:
+            ruta.text=files.path
+            files.path=ruta.text
+    def firmar(self, file, cifrador):
+        bool=False
+        try:
+            if cifrador=="RSA":
+                file=str(file[0])
+                bool=pks.firmarRSA(file)
+            elif cifrador=="ElGamal":
+                file=str(file[0])
+                bool=pks.firmarGamal(file)
+            elif cifrador=="Menezes Vanestone":
+                file=str(file[0])
+                bool=pks.firmarMV(file)
+        except:
+            pass
+        if (bool):
+            Popup_Screen().setText("La firma ha sido generada.")
+            Popup_Screen().open()
+        else:
+            Popup_Screen().setText("No se ha realizado la firma, revise que el archivo sea válido.")
+            Popup_Screen().open()
+    def verificar(self, file, cifrador):
+        
+        bool=False
+        
+        try:
+            if cifrador=="RSA":
+                file=str(file[0])
+                bool=pks.verificarRSA(file)
+            elif cifrador=="ElGamal":
+                file=str(file[0])
+                bool=pks.verificarGamal(file)
+            elif cifrador=="Menezes Vanestone":
+                file=str(file[0])
+                bool=pks.verificarMV(file)
+        except:
+            pass
+        if (bool):
+            Popup_Screen().setText("El archivo ha sido verificado.")
+            Popup_Screen().open()
+        else:
+            Popup_Screen().setText("El archivo o la clave han sido modificados.")
+            Popup_Screen().open()
+
+
+class Popup_Screen(Popup):
+    texto = ""
+    def setText(self, texto):
+        global auxtext
+        auxtext= texto
+    def getText(self):
+        return auxtext
+
 class CriptoMoon(App):
     def build(self):
         # Create the screen manager
         sm = ScreenManager()
         sm.add_widget(MenuScreen(name='menu'))
         sm.add_widget(LlavePublica_Screen(name='LlavePublica'))
+        sm.add_widget(FirmaDigital_Screen(name='FirmaDigital'))
         return sm
 
 if __name__ == '__main__':
