@@ -1,4 +1,3 @@
-from tkinter import Label
 from kivy.app import App
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
@@ -213,7 +212,6 @@ class FirmaDigital_Screen(Screen):
 
 
 class Popup_Screen(Popup):
-    texto = ""
     def setText(self, texto):
         global auxtext
         auxtext= texto

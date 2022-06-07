@@ -32,8 +32,7 @@ def firmarRSA(file):
     h = SHA256.new(f)
     signer=pkcs1_15.new(privatekey)
     signature=signer.sign(h)
-    name=file.split("\\")[-1]
-    file_out = open(name+".pem", "wb")
+    file_out = open("firma_RSA.pem", "wb")
     file_out.write(signature)
     file_out.close()
     return True
@@ -46,9 +45,8 @@ def verificarRSA(file):
     file_in = open(file, "rb")
     with file_in as opened_file:
         message=base64.b64encode(opened_file.read())
-    name=file.split("\\")[-1]
     file_in.close()
-    file_in = open(name+".pem", "rb")
+    file_in = open("firma_RSA.pem", "rb")
     signature=file_in.read()
     file_in.close()
     h = SHA256.new(message)
@@ -108,7 +106,6 @@ def firmarGamal(file):
     
     r=pow(alpha,h,p)    
     s=((H-(a*r))*h_inv)%(p-1)
-    
     file_out = open("firma_gamal.txt", "w")
     file_out.write(str(r))
     file_out.write("\n")
@@ -167,7 +164,7 @@ def firmarMV(file):
     h = SHA256.new(f)
     signer=DSS.new(privatekey,'fips-186-3')
     signature=signer.sign(h)
-    file_out = open("signature.pem", "wb")
+    file_out = open("firma_mv.pem", "wb")
     file_out.write(signature)
     file_out.close()
     return True
@@ -181,7 +178,7 @@ def verificarMV(file):
     with file_in as opened_file:
         message=base64.b64encode(opened_file.read())
     file_in.close()
-    file_in = open("signature.pem", "rb")
+    file_in = open("firma_mv.pem", "rb")
     signature=file_in.read()
     file_in.close()
     h = SHA256.new(message)
