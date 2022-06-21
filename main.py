@@ -2,7 +2,7 @@ from kivy.app import App
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 import PublicKey as pk
-import PublicKeySignature as pks
+#import PublicKeySignature as pks
 from sympy import randprime
 from kivy.uix.popup import Popup 
 import Image as im
