@@ -5,6 +5,7 @@ import PublicKey as pk
 import PublicKeySignature as pks
 from sympy import randprime
 from kivy.uix.popup import Popup 
+import Image as im
 
 #Loading the interface properties
 #Builder.load_file('CriptoMoon.kv')
@@ -210,6 +211,13 @@ class FirmaDigital_Screen(Screen):
             Popup_Screen().setText("El archivo o la clave han sido modificados.")
             Popup_Screen().open()
 
+class Imagenes_Screen(Screen):
+    def changeStyle(self,text):
+        if text== "Icon":
+            return "List", 'icon'
+        else: return "Icon", 'list'
+    def cifrar(self, image, A, B):
+        im.encriptarImage(image.source, image, A, B)
 
 class Popup_Screen(Popup):
     def setText(self, texto):
@@ -225,6 +233,7 @@ class CriptoMoon(App):
         sm.add_widget(MenuScreen(name='menu'))
         sm.add_widget(LlavePublica_Screen(name='LlavePublica'))
         sm.add_widget(FirmaDigital_Screen(name='FirmaDigital'))
+        sm.add_widget(Imagenes_Screen(name='Imagenes'))
         return sm
 
 if __name__ == '__main__':
