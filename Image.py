@@ -143,61 +143,100 @@ def encriptarImage(imagen, muestra, A, B):
     datos_imagen_T2=datos_imagen
 
     datos_list=datos_norml[1]
-
+    secuencia = ""
+    ocurrencias_rojo = 0
+    ocurrencias_negro = 0
+    ocurrencias_azul = 0
+    ocurrencias_fucsia = 0
+    ocurrencias_amarillo = 0
+    ocurrencias_verde = 0
+    ocurrencias_aqua = 0
+    ocurrencias_blanco = 0
     for item in datos_list:
-             #ampliar rojo
-            if (item==R):
-                aux_permuto=permutar_matrices(Y_R,C_R)
-                imagen_T1T2.append(aux_permuto[0])
-                imagen_T1.append(aux_permuto[1][0])
-                imagen_T2.append(aux_permuto[1][1])
-            #ampliar negro
-            if (item==N):
-                aux_permuto=permutar_matrices(Y_N,C_N)
-                imagen_T1T2.append(aux_permuto[0])
-                imagen_T1.append(aux_permuto[1][0])
-                imagen_T2.append(aux_permuto[1][1])
+        # ampliar rojo
+        if (item == R):
+            aux_permuto = permutar_matrices(Y_R, C_R)
+            imagen_T1T2.append(aux_permuto[0])
+            imagen_T1.append(aux_permuto[1][0])
+            imagen_T2.append(aux_permuto[1][1])
+            ocurrencias_rojo = ocurrencias_rojo + 1
+            secuencia = secuencia + "R >"
+        # ampliar negro
+        if (item == N):
+            aux_permuto = permutar_matrices(Y_N, C_N)
+            imagen_T1T2.append(aux_permuto[0])
+            imagen_T1.append(aux_permuto[1][0])
+            imagen_T2.append(aux_permuto[1][1])
+            secuencia = secuencia + "N >"
+            ocurrencias_negro = ocurrencias_negro + 1
+        # ampliar azul
+        if (item == Az):
+            aux_permuto = permutar_matrices(Y_Az, C_Az)
+            imagen_T1T2.append(aux_permuto[0])
+            imagen_T1.append(aux_permuto[1][0])
+            imagen_T2.append(aux_permuto[1][1])
+            secuencia = secuencia + "Az>"
+            ocurrencias_azul = ocurrencias_azul + 1
 
-             #ampliar azul
-            if (item==Az):
-                aux_permuto=permutar_matrices(Y_Az,C_Az)
-                imagen_T1T2.append(aux_permuto[0])
-                imagen_T1.append(aux_permuto[1][0])
-                imagen_T2.append(aux_permuto[1][1])
+        # ampliar fucsia
+        if (item == F):
+            aux_permuto = permutar_matrices(Y_F, C_F)
+            imagen_T1T2.append(aux_permuto[0])
+            imagen_T1.append(aux_permuto[1][0])
+            imagen_T2.append(aux_permuto[1][1])
+            secuencia = secuencia + "F >"
+            ocurrencias_fucsia = ocurrencias_fucsia + 1
+        # ampliar amarillo
+        if (item == Am):
+            aux_permuto = permutar_matrices(Y_Am, C_Am)
+            imagen_T1T2.append(aux_permuto[0])
+            imagen_T1.append(aux_permuto[1][0])
+            imagen_T2.append(aux_permuto[1][1])
+            secuencia = secuencia + "Am >"
+            ocurrencias_amarillo = ocurrencias_amarillo + 1
+        # ampliar verde
+        if (item == V):
+            aux_permuto = permutar_matrices(Y_V, C_V)
+            imagen_T1T2.append(aux_permuto[0])
+            imagen_T1.append(aux_permuto[1][0])
+            imagen_T2.append(aux_permuto[1][1])
+            secuencia = secuencia + "V >"
+            ocurrencias_verde = ocurrencias_verde + 1
+        # ampliar aqua
+        if (item == Aq):
+            aux_permuto = permutar_matrices(Y_Aq, C_Aq)
+            imagen_T1T2.append(aux_permuto[0])
+            imagen_T1.append(aux_permuto[1][0])
+            imagen_T2.append(aux_permuto[1][1])
+            secuencia = secuencia + "Aq >"
+            ocurrencias_aqua = ocurrencias_aqua + 1
 
-             #ampliar fucsia
-            if (item==F):
-                aux_permuto=permutar_matrices(Y_F,C_F)
-                imagen_T1T2.append(aux_permuto[0])
-                imagen_T1.append(aux_permuto[1][0])
-                imagen_T2.append(aux_permuto[1][1])
-             #ampliar amarillo
-            if (item==Am):
-                aux_permuto=permutar_matrices(Y_Am,C_Am)
-                imagen_T1T2.append(aux_permuto[0])
-                imagen_T1.append(aux_permuto[1][0])
-                imagen_T2.append(aux_permuto[1][1])
+        # ampliar blanco
+        if (item == Bl):
+            aux_permuto = permutar_matrices(Y_Bl, C_Bl)
+            imagen_T1T2.append(aux_permuto[0])
+            imagen_T1.append(aux_permuto[1][0])
+            imagen_T2.append(aux_permuto[1][1])
+            secuencia = secuencia + "Bl >"
+            ocurrencias_blanco = ocurrencias_blanco + 1
 
-            #ampliar verde
-            if (item==V):
-                aux_permuto=permutar_matrices(Y_V,C_V)
-                imagen_T1T2.append(aux_permuto[0])
-                imagen_T1.append(aux_permuto[1][0])
-                imagen_T2.append(aux_permuto[1][1])
+    Totalocurrencias = ocurrencias_blanco + ocurrencias_aqua + ocurrencias_verde + ocurrencias_amarillo + ocurrencias_fucsia + ocurrencias_azul + ocurrencias_negro + ocurrencias_rojo
+    ocurrencias = [("ocurrencias_blanco", ocurrencias_blanco), ("currencias_aqua", ocurrencias_aqua),
+                   ("currencias verde", ocurrencias_verde), ("ocurrencias amarillo", ocurrencias_amarillo),
+                   ("ocurrencias fucsia", ocurrencias_fucsia), ("ocurrencias azul", ocurrencias_azul),
+                   ("ocurrencias negro", ocurrencias_negro), ("ocurrencias rojo", ocurrencias_rojo)]
 
-             #ampliar aqua
-            if (item==Aq):
-                aux_permuto=permutar_matrices(Y_Aq,C_Aq)
-                imagen_T1T2.append(aux_permuto[0])
-                imagen_T1.append(aux_permuto[1][0])
-                imagen_T2.append(aux_permuto[1][1])
+    Poligonos = ["N", "Bl", "R", "Az", "V", "Aq", "F", "Am"]
+    multiplicidad = 16
 
-             #ampliar blanco
-            if (item==Bl):
-                aux_permuto=permutar_matrices(Y_Bl,C_Bl)
-                imagen_T1T2.append(aux_permuto[0])
-                imagen_T1.append(aux_permuto[1][0])
-                imagen_T2.append(aux_permuto[1][1])
+    #######
+    datos = [Poligonos, multiplicidad, Totalocurrencias, ocurrencias, secuencia]
+    '''print("Poligonos: ", datos[0])
+    print("Multiplicidad: ", datos[1])
+    print("Ocurrencias: ", datos[2])
+    for i in range(0,8):
+        print(datos[3][i])'
+    print("secuencia:", datos[4])'''
 
     #se acomodan los datos de las imagenes
     imagenes=[imagen_T1,imagen_T2,imagen_T1T2]
