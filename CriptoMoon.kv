@@ -310,8 +310,7 @@
                     size_hint:.5, .1
                     text: 'Cargar'
                     on_press: 
-                        image.source = str(files.selection[0])
-                        image.opacity= 1
+                        root.rutas(image, files)
             BoxLayout:
                 orientation: "vertical"
                 spacing: 15
