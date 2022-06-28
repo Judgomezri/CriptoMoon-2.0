@@ -5,6 +5,6 @@
 + Critografía visual basada en retículos y álgebra de Brauer
 + Este Proyecto fue diseñado en windows sirve para mac pero con algunas alteraciones visuales de la interfaz
 + Asegurese de tener intalado Python 3.0 o superior.
-
++ Simulación de Blockching
 # Instalación requerimientos
 pip install -r requirements.txt
