@@ -2,15 +2,19 @@ from kivy.app import App
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 import PublicKey as pk
-#import PublicKeySignature as pks
+import PublicKeySignature as pks
 from sympy import randprime
 from kivy.uix.popup import Popup 
 import Image as im
+import Blockchain as Bc
+from kivy.uix.textinput import TextInput
+import binascii
 
 #Loading the interface properties
 #Builder.load_file('CriptoMoon.kv')
 
 auxtext=""
+claveaux=""
 def list_to_str(list):
     s=[]
     for i in range(0,len(list)):
@@ -27,7 +31,13 @@ def str_to_list(text):
 
 # Declare both screens
 class MenuScreen(Screen):
-    pass
+    def Full_Blockchain(self):
+        text = ""
+        for i in Bc.Full_blockchain(Bc.MoonCoins):
+            text = text+i
+            Full_Blockchain_Screen.setText(text)
+
+
 class LlavePublica_Screen(Screen):
     def spinner_clicked(self, cifrador, grid, primo1, primo2, data1, data2, data3, data4, data5):
         primo1.select_all(); primo1.delete_selection()
@@ -168,18 +178,24 @@ class FirmaDigital_Screen(Screen):
         if files.path!=ruta.text:
             ruta.text=files.path
             files.path=ruta.text
-    def firmar(self, file, cifrador):
+    def firmar(self, file, cifrador, firma):
         bool=False
+        firma.text = ""
         try:
             if cifrador=="RSA":
                 file=str(file[0])
-                bool=pks.firmarRSA(file)
+                clave,bool=pks.firmarRSA(file)
+                firma.text=binascii.hexlify(clave).decode('ascii')
             elif cifrador=="ElGamal":
                 file=str(file[0])
-                bool=pks.firmarGamal(file)
+                clave1, clave2, bool=pks.firmarGamal(file)
+                firma.text = clave1 + "\n" + clave2
             elif cifrador=="Menezes Vanestone":
                 file=str(file[0])
-                bool=pks.firmarMV(file)
+                clave, bool=pks.firmarMV(file)
+                firma.text = binascii.hexlify(clave).decode('ascii')
+            global claveaux
+            claveaux=firma.text
         except:
             pass
         if (bool):
@@ -188,10 +204,9 @@ class FirmaDigital_Screen(Screen):
         else:
             Popup_Screen().setText("No se ha realizado la firma, revise que el archivo sea válido.")
             Popup_Screen().open()
-    def verificar(self, file, cifrador):
-        
+
+    def verificar(self, file, cifrador, firma):
         bool=False
-        
         try:
             if cifrador=="RSA":
                 file=str(file[0])
@@ -202,6 +217,9 @@ class FirmaDigital_Screen(Screen):
             elif cifrador=="Menezes Vanestone":
                 file=str(file[0])
                 bool=pks.verificarMV(file)
+            global claveaux
+            if(claveaux!=firma.text):
+                bool=False
         except:
             pass
         if (bool):
@@ -211,13 +229,7 @@ class FirmaDigital_Screen(Screen):
             Popup_Screen().setText("El archivo o la clave han sido modificados.")
             Popup_Screen().open()
 
-class Imagenes_Screen(Screen):
-    def changeStyle(self,text):
-        if text== "Icon":
-            return "List", 'icon'
-        else: return "Icon", 'list'
-    def cifrar(self, image, A, B):
-        im.encriptarImage(image.source, image, A, B)
+
 
 class Popup_Screen(Popup):
     def setText(self, texto):
@@ -225,6 +237,70 @@ class Popup_Screen(Popup):
         auxtext= texto
     def getText(self):
         return auxtext
+
+class Imagenes_Screen(Screen):
+    def changeStyle(self,text):
+        if text== "Icon":
+            return "List", 'icon'
+        else: return "Icon", 'list'
+        
+    def cifrar(self, image, A, B):
+        im.encriptarImage(image.source, image, A, B)
+
+class Blockchain_Screen(Screen):
+    def transaccion(self, remitente, destinatario, cantidad, texto):
+        try:
+            rem = ""
+            dest= ""
+            if(remitente == "Juan"):
+                rem = Bc.Juan
+            if(remitente == "Daniel"):
+                rem = Bc.Daniel
+            if(remitente == "Carlos"):
+                rem = Bc.Carlos
+            if(remitente == "Agustin"):
+                rem = Bc.Agustin
+            if(destinatario == "Juan"):
+                dest = Bc.Juan
+            if(destinatario == "Daniel"):
+                dest = Bc.Daniel
+            if(destinatario == "Carlos"):
+                dest = Bc.Carlos
+            if(destinatario == "Agustin"):
+                dest = Bc.Agustin
+            trans = Bc.AñadirTransacción(rem,dest.identidad,float(cantidad))
+            resultado = Bc.mostrarTransaccion(trans)
+            for i in resultado:
+                texto.text= texto.text+i
+            Popup_Screen().setText("Se ha realizado la transacción.")
+            Popup_Screen().open()
+        except:
+            Popup_Screen().setText("No se ha realizado la transacción. Compruebe que los valores son correctos.")
+            Popup_Screen().open()
+    
+    def Minar(self, trans):
+        bool = Bc.agregarbloque()
+        if (bool):
+            Popup_Screen().setText("El bloque ha sido creado. Se han verificado todas las transacciones.")
+            Popup_Screen().open()
+            trans.text = ""
+        else:
+            Popup_Screen().setText("Parece que no hay suficientes transacciones para generar un bloque.")
+            Popup_Screen().open()
+        self.Full_Blockchain()
+
+    def Full_Blockchain(self):
+        text = ""
+        for i in Bc.Full_blockchain(Bc.MoonCoins):
+            text = text+i
+            Full_Blockchain_Screen.setText(text)
+
+class Full_Blockchain_Screen(Screen):
+    space = TextInput()
+    def setSpace(self, space):
+        self.space=space
+    def setText(text):
+        Full_Blockchain_Screen.space.text = text
 
 class CriptoMoon(App):
     def build(self):
@@ -234,6 +310,8 @@ class CriptoMoon(App):
         sm.add_widget(LlavePublica_Screen(name='LlavePublica'))
         sm.add_widget(FirmaDigital_Screen(name='FirmaDigital'))
         sm.add_widget(Imagenes_Screen(name='Imagenes'))
+        sm.add_widget(Blockchain_Screen(name='Blockchain'))
+        sm.add_widget(Full_Blockchain_Screen(name='Full_Blockchain'))
         return sm
 
 if __name__ == '__main__':

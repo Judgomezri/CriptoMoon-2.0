@@ -35,7 +35,7 @@ def firmarRSA(file):
     file_out = open("firma_RSA.pem", "wb")
     file_out.write(signature)
     file_out.close()
-    return True
+    return signature,True
     #print(signature.hex())
 
 ########################################################
@@ -114,7 +114,7 @@ def firmarGamal(file):
     file_out.close()
     
     
-    return True
+    return str(r), str(s), True
 
 
 #############################################################################
@@ -168,7 +168,7 @@ def firmarMV(file):
     file_out = open("firma_MV.pem", "wb")
     file_out.write(signature)
     file_out.close()
-    return True
+    return signature,True
     #print(signature.hex())
 
 ########################################################

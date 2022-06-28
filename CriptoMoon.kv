@@ -12,7 +12,6 @@
             spacing: 15
             orientation: "vertical"
             size_hint: .8, .5
-            #width: "300dp"
             Image:
                 source: "Logo.png"
                 width: 1
@@ -25,6 +24,13 @@
             Button:
                 text: 'Imágenes'
                 on_press: root.manager.current = 'Imagenes'
+                width: .5
+            
+            Button:
+                text: 'Moon Coins'
+                on_press: 
+                    root.manager.current = 'Blockchain'
+                    root.Full_Blockchain()
                 width: .5
                     
             Button:
@@ -247,11 +253,16 @@
             Button:
                 text: "Firmar"
                 size_hint: 1, .5
-                on_release: root.firmar(files.selection, cifrador.text)
+                on_release: root.firmar(files.selection, cifrador.text, clave)
             Button:
                 text: "Verificar"
                 size_hint: 1, .5
-                on_release: root.verificar(files.selection, cifrador.text)
+                on_release: root.verificar(files.selection, cifrador.text, clave)
+        Label:
+            size_hint: 1,.1
+            text: "Firma"
+        TextInput:
+            id: clave
         Button:
             pos_hint: {"center_x": .5}
             size_hint:.5, .5
@@ -380,3 +391,86 @@
             size_hint:.5, .1
             text: 'Volver al menú'
             on_press: root.manager.current = 'menu'
+
+<Blockchain_Screen>:
+    Image:
+        source: "space.jpg"
+        allow_stretch: True
+        keep_ratio: False
+    BoxLayout:
+        spacing: 15
+        padding: 5
+        size_hint:.9, 1
+        pos_hint: {"center_x": .5}
+        orientation: "vertical"
+        BoxLayout:
+            spacing: 15
+            padding: 5
+            size_hint:1, .1
+            Label:
+                text: "Usuario"
+            Spinner:
+                id: nombre
+                text: "..."
+                values: ["Daniel", "Juan", "Carlos", "Agustin"]
+            Label:
+                text: "Destinatario"
+            Spinner:
+                id: dest
+                text: "..."
+                values: ["Daniel", "Juan", "Carlos", "Agustin"]
+            Label:
+                text: "Cantidad"
+            TextInput:
+                id: cant
+            Button:
+                text: "Aplicar"
+                on_press: root.transaccion(nombre.text, dest.text, cant.text, trans)
+        Label:
+            pos_hint: {"left": .5}
+            size_hint:.3, .1
+            text: "Transacciones"
+        TextInput:
+            id: trans
+        BoxLayout:
+            spacing: 40
+            padding: 5
+            size_hint:1, .1
+            Button:
+                size_hint:1, 1
+                text: 'Minar'
+                on_press: 
+                    root.Minar(trans)
+            Button:
+                size_hint: 1, 1
+                text: 'Mostrar Blockchain'
+                on_press: root.manager.current = 'Full_Blockchain'
+        Button:
+            pos_hint: {"center_x": .5}
+            size_hint:.5, .1
+            text: 'Volver al menú'
+            on_press: root.manager.current = 'menu'
+
+<Full_Blockchain_Screen>:
+    Image:
+        source: "space.jpg"
+        allow_stretch: True
+        keep_ratio: False
+    BoxLayout:
+        spacing: 15
+        padding: 5
+        size_hint:.9, 1
+        pos_hint: {"center_x": .5}
+        orientation: "vertical"
+        Label:
+            text: "Blockchain Completo"
+            size_hint:.5, .1
+            pos_hint: {"left": .5}
+        TextInput:
+            id: block
+            text: root.space.text
+        Button:
+            pos_hint: {"center_x": .5}
+            size_hint:.5, .1
+            text: 'Volver'
+            on_press: root.manager.current = 'Blockchain'
